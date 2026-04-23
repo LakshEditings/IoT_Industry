@@ -114,6 +114,77 @@ app.post('/api/telemetry-timing', async (req, res) => {
   }
 });
 
+app.get('/api/telemetry/export', async (req, res) => {
+  try {
+    const { min, max, operatorId } = req.query;
+    
+    if (!min || !max || !operatorId) {
+      return res.status(400).json({ error: 'Missing required query parameters' });
+    }
+
+    const minDate = new Date(min);
+    const maxDate = new Date(max);
+
+    const history = await Telemetry.find({
+      operatorId,
+      timestamp: {
+        $gte: minDate,
+        $lte: maxDate
+      }
+    }).sort({ timestamp: 1 });
+
+    res.status(200).json({ recordCount: history.length, data: history });
+  } catch (error) {
+    console.error('Historical export error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/api/single-component-check', async (req, res) => {
+  try {
+    const SingleComponentCheck = require('./models/SingleComponentCheck');
+    
+    // Default to Monday and full 8 hours if no params provided
+    const day = req.query.day || 'Monday';
+    const fromTime = req.query.from || '08:00:00';
+    const toTime = req.query.to || '16:00:00';
+
+    const query = {
+      Day: day,
+      Time24: {
+        $gte: fromTime,
+        $lte: toTime
+      }
+    };
+
+    const rows = await SingleComponentCheck.find(query).sort({ Time24: 1 });
+    
+    // Initialize counters for 6 channels (in seconds)
+    const totals = { Ch1: 0, Ch2: 0, Ch3: 0, Ch4: 0, Ch5: 0, Ch6: 0 };
+    
+    rows.forEach(row => {
+      if (row.Ch1 === 1) totals.Ch1 += 5;
+      if (row.Ch2 === 1) totals.Ch2 += 5;
+      if (row.Ch3 === 1) totals.Ch3 += 5;
+      if (row.Ch4 === 1) totals.Ch4 += 5;
+      if (row.Ch5 === 1) totals.Ch5 += 5;
+      if (row.Ch6 === 1) totals.Ch6 += 5;
+    });
+
+    // Convert to SECONDS and MINUTES
+    const results = Object.keys(totals).map(ch => ({
+      channel: ch,
+      totalSeconds: totals[ch],
+      totalMinutes: (totals[ch] / 60).toFixed(2)
+    }));
+
+    res.status(200).json({ totals: results, timeline: rows });
+  } catch (error) {
+    console.error('Single component check error:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });

@@ -40,6 +40,10 @@ const Sidebar = () => {
             <LayoutTemplate size={20} />
             <span>Report</span>
           </NavLink>
+          <NavLink to="/dashboard/testing" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+            <Activity size={20} />
+            <span>Testing</span>
+          </NavLink>
         </nav>
       </div>
 

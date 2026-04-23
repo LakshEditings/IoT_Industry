@@ -4,6 +4,7 @@ import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import Settings from './pages/Settings';
 import Report from './pages/Report';
+import Testing from './pages/Testing';
 
 import AuthLayout from './layouts/AuthLayout';
 import DashboardLayout from './layouts/DashboardLayout';
@@ -26,6 +27,7 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/settings" element={<Settings />} />
         <Route path="/dashboard/report" element={<Report />} />
+        <Route path="/dashboard/testing" element={<Testing />} />
       </Route>
     </Routes>
   );
