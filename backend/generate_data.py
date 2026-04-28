@@ -1,38 +1,38 @@
 import json, random
 from datetime import datetime, timedelta
 
-days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
-start_time_str = "08:00:00 AM"
-end_time_str = "04:00:00 PM"
+days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
+start_dt = datetime.strptime("08:00:00", "%H:%M:%S")
+end_dt   = datetime.strptime("16:00:00", "%H:%M:%S")
+out = "./weekly_8am_to_4pm_every5sec.json"
 
-rows = []
-
+data = []
 for day in days:
-    start = datetime.strptime(start_time_str, "%I:%M:%S %p")
-    end = datetime.strptime(end_time_str, "%I:%M:%S %p")
-    
-    t = start
-    while t <= end:
-        # Guarantee at least one channel is active occasionally, but random mostly
-        while True:
-            vals = [random.randint(0, 1) for _ in range(6)]
-            if any(v == 1 for v in vals):
-                break
-        
-        row = {
-            "Day": day,
-            "Time": t.strftime("%I:%M:%S %p"),
-            "Time24": t.strftime("%H:%M:%S")
+    current = start_dt
+    row = 1
+    while current <= end_dt:
+        entry = {
+            "Day":    day,
+            "Time":   current.strftime("%I:%M:%S %p"),
+            "Time24": current.strftime("%H:%M:%S")
         }
-        
-        for i, v in enumerate(vals, start=1):
-            row[f"Ch{i}"] = v
-            
-        rows.append(row)
-        t += timedelta(seconds=5)
+        if row <= 6:
+            for ch in range(1, 7):
+                entry[f"Ch{ch}"] = 1 if ch == row else 0
+        else:
+            vals = [0]*6
+            while sum(vals) == 0:
+                vals = [random.randint(0,1) for _ in range(6)]
+            for ch in range(1, 7):
+                entry[f"Ch{ch}"] = vals[ch-1]
+        data.append(entry)
+        current += timedelta(seconds=5)
+        row += 1
 
-path = './channel_multi_binary_6days.json'
-with open(path, 'w') as f:
-    json.dump(rows, f, indent=2)
+with open(out, "w") as f:
+    json.dump(data, f, indent=2)
 
-print(f"Saved {len(rows)} rows to {path}")
+rows_per_day = int(((end_dt - start_dt).total_seconds()) / 5) + 1
+print(f"Created {out}")
+print(f"Rows/day: {rows_per_day}")
+print(f"Total rows: {len(data)}")

@@ -10,7 +10,7 @@ mongoose.connect(MONGODB_URI)
   .then(async () => {
     console.log('Connected to MongoDB Compass (industrial_iot)');
 
-    const jsonPath = path.join(__dirname, 'channel_multi_binary_6days.json');
+    const jsonPath = path.join(__dirname, 'weekly_8am_to_4pm_every5sec.json');
     const rawData = fs.readFileSync(jsonPath);
     const rows = JSON.parse(rawData);
 

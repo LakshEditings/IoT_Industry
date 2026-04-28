@@ -9,7 +9,7 @@ const parameterNames = [
   "Amplitude", "Flow Rate", "Vibration", "Displacement", "Strain", "pH Level", "Gas Concentration",
   "Radiation", "Luminosity", "Acoustic Pressure", "Mass", "Density", "Viscosity", "Conductivity",
   "Turbidity", "RPM", "Load", "Oxygen Level", "Salinity", "Oxidation", "Altitude", "Latitude",
-  "Longitude", "Gyro X", "Gyro Y", "Gyro Z"
+  "Longitude", "Gyro X", "Gyro Y", "Gyro Z", "Power Factor"
 ];
 
 export const TelemetryProvider = ({ children }) => {
