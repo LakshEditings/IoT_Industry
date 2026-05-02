@@ -38,6 +38,10 @@ const Sidebar = () => {
             <LayoutTemplate size={20} />
             <span>Report</span>
           </NavLink>
+          <NavLink to="/dashboard/testreport" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+            <LayoutTemplate size={20} />
+            <span>Test Report</span>
+          </NavLink>
           {/* Testing page is intentionally excluded from the Sidebar.
               Access it directly via: /dashboard/testing */}
         </nav>

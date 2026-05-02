@@ -20,7 +20,7 @@ const Dashboard = () => {
       }}>
         {boxes.map((val, idx) => (
           <div key={idx} style={{
-            backgroundColor: 'var(--accent-hover)', // Primary2 (yellow/orange mapped in theme)
+            backgroundColor: 'grey', // Primary2 (yellow/orange mapped in theme)
             borderRadius: '16px',
             border: '4px solid var(--accent-color)',
             display: 'flex',
