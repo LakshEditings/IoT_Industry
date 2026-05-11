@@ -14,7 +14,7 @@ mongoose.connect(MONGODB_URI)
 
     /* ── 1. Users ── */
     await User.deleteMany({});
-    console.log('Cleared users');
+    console.log('Cleared Users');
 
     const users = [
       { email: 'test@plant.io',  password: '123456' },
